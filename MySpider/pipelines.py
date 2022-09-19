@@ -7,18 +7,25 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 import json
+import pymysql
+from datetime import datetime
 
 
 class MyspiderPipeline:
-
     def __init__(self):
-        self.file = open('tags.json', 'w')
+        self.conn = pymysql.connect(user='root', password='921218', host='localhost', port=3306,
+                                    database='djblog', charset='utf8')
+        self.cursor = self.conn.cursor()
 
     def process_item(self, item, spider):
-        item = dict(item)
-        json_data = json.dumps(item, ensure_ascii=False) + ',\n'
-        self.file.write(json_data)
+        tag_name = item['tag_name']
+        tag_url = item['tag_url']
+        sql = """insert into category(category_name, category_url, created_date, alias)
+                  values ('{0}', '{1}', {2}, {3})
+            """.format(tag_name, tag_url, 'SYSDATE()', "''")
+        self.cursor.execute(sql)
         return item
 
-    def __del__(self):
-        self.file.close()
+    def close_spider(self, spider):
+        self.conn.commit()
+        self.conn.close()

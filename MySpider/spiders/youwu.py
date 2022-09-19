@@ -1,6 +1,6 @@
 import scrapy
 
-from MySpider.items import MyspiderItem
+from MySpider.items import CategoryItem
 
 
 class YouwuSpider(scrapy.Spider):
@@ -10,7 +10,7 @@ class YouwuSpider(scrapy.Spider):
 
     def parse(self, response, **kwargs):
         tag_list = response.xpath('//div[@class="jigou"]/ul/li')
-        item = MyspiderItem()
+        item = CategoryItem()
         for tag in tag_list:
             item['tag_name'] = tag.xpath('a/text()').get()
             item['tag_url'] = tag.xpath('a/@href').get()

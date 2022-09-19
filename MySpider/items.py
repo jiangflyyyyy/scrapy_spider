@@ -6,7 +6,7 @@
 import scrapy
 
 
-class MyspiderItem(scrapy.Item):
+class CategoryItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     tag_name = scrapy.Field()  # 标签名称
